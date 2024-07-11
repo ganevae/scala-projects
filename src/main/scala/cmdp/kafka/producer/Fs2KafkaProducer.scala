@@ -6,6 +6,7 @@ import fs2.io.file._
 import fs2.kafka._
 import fs2.text
 import org.apache.kafka.common.errors.{InvalidProducerEpochException, ProducerFencedException}
+import upickle.legacy.{ReadWriter, macroRW}
 
 class Fs2KafkaProducer(chunkSize: Int, producerProperties: Map[String, String]) {
 

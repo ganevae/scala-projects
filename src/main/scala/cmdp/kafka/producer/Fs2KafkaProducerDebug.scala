@@ -7,6 +7,11 @@ import fs2.kafka._
 import fs2.{Stream, text}
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.errors.{InvalidProducerEpochException, ProducerFencedException}
+import software.amazon.awssdk.core.async.AsyncResponseTransformer
+import software.amazon.awssdk.services.s3.S3AsyncClient
+import software.amazon.awssdk.services.s3.model.GetObjectRequest
+import upickle.legacy
+import upickle.legacy.{ReadWriter, macroRW}
 
 class Fs2KafkaProducerDebug(chunkSize: Int, batchSize: Int) {
 
@@ -46,7 +51,7 @@ class Fs2KafkaProducerDebug(chunkSize: Int, batchSize: Int) {
           .map {_.toList map toGeneticVariant}
           .map {
             _.map { geneticVariant => {
-                val json = write(geneticVariant)
+                val json = legacy.write(geneticVariant)
                 println(json)
                 ProducerRecord("test-topic",
                   geneticVariant.snpId.toString,

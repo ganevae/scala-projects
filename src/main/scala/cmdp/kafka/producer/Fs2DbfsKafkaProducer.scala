@@ -6,6 +6,8 @@ import fs2.io.readInputStream
 import fs2.kafka._
 import fs2.text
 import org.apache.kafka.common.errors.{InvalidProducerEpochException, ProducerFencedException}
+import upickle.legacy
+import upickle.legacy.{ReadWriter, macroRW}
 
 import java.io.InputStream
 
@@ -42,7 +44,7 @@ class Fs2DbfsKafkaProducer(chunkSize: Int, producerProperties: Map[String, Strin
             _.map { geneticVariant =>
               ProducerRecord(producerProperties("topic"),
                 geneticVariant.snpId.toString,
-                write(geneticVariant))
+                legacy.write(geneticVariant))
             }
           }
           .map(records => ProducerRecords(records))
