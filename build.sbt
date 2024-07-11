@@ -10,8 +10,9 @@ lazy val root = (project in file("."))
     libraryDependencies ++= Seq(
       "com.github.fd4s" %% "fs2-kafka" % "3.5.1",
       "co.fs2" %% "fs2-io" % "3.10.2",
-      "com.fasterxml.jackson.core" % "jackson-core" % "2.17.0",
-      "com.fasterxml.jackson.core" % "jackson-databind" % "2.17.0"
+      "com.lihaoyi" %% "upickle" % "3.3.1",
+      "software.amazon.awssdk" % "s3" % "2.25.27",
+      "software.amazon.awssdk" % "core" % "2.26.15"
     ),
     assembly / test := {},
     assembly / assemblyShadeRules := Seq(
@@ -19,9 +20,10 @@ lazy val root = (project in file("."))
       ShadeRule.rename("cats.kernel.**" -> s"new_cats.kernel.@1").inAll
     ),
     assembly / assemblyMergeStrategy := {
-        case PathList("META-INF", "versions", "9", "module-info.class", _@_*) => MergeStrategy.last
-        case x =>
-          val oldStrategy = (assembly / assemblyMergeStrategy).value
-          oldStrategy(x)
-      }
+      case PathList("META-INF", "versions", "9", "module-info.class", _@_*) => MergeStrategy.last
+      case PathList("META-INF", "io.netty.versions.properties", _@_*) => MergeStrategy.last
+      case x =>
+        val oldStrategy = (assembly / assemblyMergeStrategy).value
+        oldStrategy(x)
+    }
   )
